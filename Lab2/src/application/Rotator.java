@@ -6,7 +6,7 @@ import javafx.scene.shape.StrokeLineJoin;
 
 public class Rotator extends Polygon {
 
-	private final double MAXSPEED = 3.0;
+	private static final double MAXSPEED = 3.0;
 	private double angle;
 	private double speed;
 
