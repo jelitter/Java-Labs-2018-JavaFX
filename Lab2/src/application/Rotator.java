@@ -66,8 +66,8 @@ public class Rotator extends Polygon {
 		x = this.getTranslateX() + this.getSpeed() / 3;
 		y = this.getTranslateY() + this.getSpeed() / 2;
 		
-		x *= (Math.random() < 0.005) ? -1: 1;
-		y *= (Math.random() < 0.005) ? -1: 1;
+		x *= (Math.random() < 0.0025) ? -1: 1;
+		y *= (Math.random() < 0.0025) ? -1: 1;
 
 		this.setTranslateX(x);
 		this.setTranslateY(y);
