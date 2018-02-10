@@ -1,7 +1,5 @@
 package application;
 
-import javafx.scene.shape.StrokeLineJoin;
-
 public class MyRectangle extends Rotator {
 
 	public MyRectangle(double width, double height) {
