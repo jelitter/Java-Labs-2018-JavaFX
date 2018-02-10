@@ -10,8 +10,8 @@ public class MyRectangle extends Rotator {
 		this.getPoints().addAll(new Double[]{
 				-width/2, -height/2,
 				 width/2, -height/2,
-				 width/2, height/2,
-				 -width/2, height/2
+				 width/2,  height/2,
+				-width/2,  height/2
 		});
 	}
 }

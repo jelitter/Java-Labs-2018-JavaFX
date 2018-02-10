@@ -38,12 +38,8 @@ public class Rotator extends Polygon {
 	}
 
 	public void rotate() {
-		
 		this.setSpeed(this.getSpeed() -1 + 2 * Math.random());
-
 		this.setAngle(this.getAngle() + this.getSpeed());
 		this.setRotate(this.getAngle());
 	}
-
-
 }
