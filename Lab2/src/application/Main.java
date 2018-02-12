@@ -40,7 +40,7 @@ public class Main extends Application {
 		    
 		    // Create a scene and place it in the stage
 		    Scene scene = new Scene(pane, 1000, 800);
-		    primaryStage.setTitle("ShowBorderPane"); // Set the stage title
+		    primaryStage.setTitle("Lab 2 - Isaac Sanchez"); // Set the stage title
 		    primaryStage.setScene(scene); // Place the scene in the stage
 		    primaryStage.show(); // Display the stage
 
