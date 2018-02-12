@@ -5,9 +5,14 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.text.Text;
 
 
 public class Main extends Application {
@@ -40,7 +45,7 @@ public class Main extends Application {
 		    
 		    // Create a scene and place it in the stage
 		    Scene scene = new Scene(pane, 1000, 800);
-		    primaryStage.setTitle("Lab 2 - Isaac Sanchez"); // Set the stage title
+		    primaryStage.setTitle("Lab 2 - Win 1"); // Set the stage title
 		    primaryStage.setScene(scene); // Place the scene in the stage
 
 		    new AnimationTimer() {
@@ -54,8 +59,11 @@ public class Main extends Application {
 		    	}
 		    }.start();
 		    
-		    
+		    primaryStage.setX(150);
+		    primaryStage.setY(200);
 		    primaryStage.show(); // Display the stage
+		    
+		    createSecondaryStage();
 		  
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -64,6 +72,27 @@ public class Main extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	private void createSecondaryStage() {
+		
+		Stage secondaryStage = new Stage();
+		StackPane pane = new StackPane();
+		Scene secondaryScene = new Scene(pane, 600, 800);
+		secondaryStage.setTitle("Lab 2 - Win 2"); // Set the stage title
+		secondaryStage.setScene(secondaryScene); 
+		
+		
+		Ellipse ellipse = new Ellipse(0,0, 100,50);
+		Text text = new Text("Hello");
+		
+//		secondaryStage.getC
+		
+		
+		secondaryStage.setX(1200);
+		secondaryStage.setY(200);
+		secondaryStage.show();
+		
 	}
 	
 }

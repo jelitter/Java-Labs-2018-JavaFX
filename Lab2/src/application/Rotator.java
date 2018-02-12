@@ -35,13 +35,13 @@ public class Rotator extends Polygon {
 	public void rotate() {
 
 //		Uncomment this to make rotation speed random on each iteration
-//		this.setSpeed(this.getSpeed() -1 + 2 * Math.random());
+		this.setSpeed(this.getSpeed() -1 + 2 * Math.random());
 		this.setAngle(this.getAngle() + this.getSpeed());
 		this.setRotate(this.getAngle());
 
 		this.setOpacity();
 //		Uncomment this to make polygons move based on their rotation
-//		this.translate();  
+		this.translate();  
 	}
 
 	private void setOpacity() {
