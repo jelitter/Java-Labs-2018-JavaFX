@@ -34,19 +34,25 @@ public class Rotator extends Polygon {
 
 	public void rotate() {
 
-		this.setSpeed(this.getSpeed() -1 + 2 * Math.random());
+//		Uncomment this to make rotation speed random on each iteration
+//		this.setSpeed(this.getSpeed() -1 + 2 * Math.random());
 		this.setAngle(this.getAngle() + this.getSpeed());
 		this.setRotate(this.getAngle());
 
 		this.setOpacity();
-		this.translate();
+//		Uncomment this to make polygons move based on their rotation
+//		this.translate();  
 	}
 
 	private void setOpacity() {
+		
+		// Setting opacity based on angular speed
+		
 		//		https://stackoverflow.com/questions/345187/math-mapping-numbers
 		//		If your number X falls between A and B, and you would like Y to fall between C and D, you can apply the following linear transform:
 		//			Y = (X-A)/(B-A) * (D-C) + C
 
+		
 		double y, x,a,b,c,d;
 
 		a = -MAXSPEED;

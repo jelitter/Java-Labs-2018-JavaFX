@@ -42,7 +42,6 @@ public class Main extends Application {
 		    Scene scene = new Scene(pane, 1000, 800);
 		    primaryStage.setTitle("Lab 2 - Isaac Sanchez"); // Set the stage title
 		    primaryStage.setScene(scene); // Place the scene in the stage
-		    primaryStage.show(); // Display the stage
 
 		    new AnimationTimer() {
 		    	@Override
@@ -54,6 +53,9 @@ public class Main extends Application {
 		    		rectCenter.rotate();
 		    	}
 		    }.start();
+		    
+		    
+		    primaryStage.show(); // Display the stage
 		  
 		} catch(Exception e) {
 			e.printStackTrace();
