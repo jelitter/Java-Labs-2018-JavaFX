@@ -167,9 +167,7 @@ public class ClockPane extends Pane {
 //				double r = clockRadius - 27;
 //				double cx = centerX + r * Math.sin(i * (2 * Math.PI / 60));
 //				double cy = centerY - r * Math.cos(i * (2 * Math.PI / 60));
-//				
 //				thour.getTransforms().addAll(new Rotate( -i * 6, cx, cy));
-				
 				
 				numbers.add(thour);
 				
@@ -183,17 +181,8 @@ public class ClockPane extends Pane {
 				t.setFill(second == i ? Color.RED : Color.BLACK);
 				numbers.add(t);
 			} 
-			
-			
 		}
-		
-//		for (Text t: numbers) {
-//			int i = Integer.parseInt(t.getText()) % 12;
-//			t.getTransforms().addAll(new Rotate( -i * 30, 
-//					t.getX() + t.getLayoutBounds().getWidth()/2, 
-//					t.getY() + t.getLayoutBounds().getHeight()/2
-//					));
-//		}
+
 
 		frame.getChildren().addAll(c1, c2);
 		frame.getChildren().addAll(marks);
@@ -213,14 +202,11 @@ public class ClockPane extends Pane {
 				centerX - secondWidth, centerY +28 , 
 				centerX + secondWidth, centerY +28 });
 		secondHand.getTransforms().addAll(new Rotate( (second) * 6, centerX, centerY));
-		
 
 //		new Timeline(new KeyFrame(Duration.millis(300), ae -> {
 //			secondHand.getTransforms().add(new Rotate( -1, centerX, centerY));
 //		})).play();
 		
-		
-
 
 		 //Draw minute hand
 		Polygon minuteHand = new Polygon();
@@ -253,13 +239,8 @@ public class ClockPane extends Pane {
 
 		Circle dot = new Circle(centerX, centerY, 5);
 		dot.setFill(Color.RED);
-
-	
-
 		
 		needles.getChildren().addAll(hourHand, minuteHand, secondHand, dot);
-		
-		
 
 		// Setting up needles
 		for (Node n : needles.getChildren()) {
@@ -268,43 +249,7 @@ public class ClockPane extends Pane {
 //			((Shape) n).setBlendMode(BlendMode.MULTIPLY);
 		}
 	}
-	
 
-
-//	private void setClockNumbers(double clockRadius, double centerX, double centerY, Group numbers) {
-//		Text t3 = new Text("3");
-//		Text t6 = new Text("6");
-//		Text t9 = new Text("9");
-//		Text t12 = new Text("12");
-//
-//		numbers.getChildren().addAll(t12, t3, t6, t9);
-//
-//		for (Node t : numbers.getChildren()) {
-//			((Text) t).setFont(Font.font("IMPACT", FontWeight.MEDIUM, 22));
-//			((Text) t).setFontSmoothingType(FontSmoothingType.GRAY);
-//			((Text) t).setTextAlignment(TextAlignment.CENTER);
-//		}
-//
-//		t3.setX(centerX + clockRadius - t3.getLayoutBounds().getWidth() - CLOCK_MARGIN);
-//		t3.setY(centerY + t3.getLayoutBounds().getHeight() / 4);
-//		t6.setX(centerX - t6.getLayoutBounds().getWidth() / 2);
-//		t6.setY(centerY + clockRadius +t6.getLayoutBounds().getHeight()/3 - CLOCK_MARGIN);
-//		t9.setX(centerX - clockRadius + CLOCK_MARGIN);
-//		t9.setY(centerY + t9.getLayoutBounds().getHeight() / 4);
-//		t12.setX(centerX - t12.getLayoutBounds().getWidth() / 2);
-//		t12.setY(centerY - clockRadius + t12.getLayoutBounds().getHeight() / 2 + CLOCK_MARGIN);
-//	}
-
-	public void updateClockFrame() {
-		// Color c = (Color) c1.getStroke();
-
-		c1.setRotate(+1);
-
-		// if (second < 30)
-		// c1.setStroke(c.brighter());
-		// else
-		// c1.setStroke(c.darker());
-	}
 
 	@Override
 	public void setWidth(double width) {
