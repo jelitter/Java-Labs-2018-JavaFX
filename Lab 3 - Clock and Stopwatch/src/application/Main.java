@@ -44,10 +44,10 @@ public class Main extends Application {
 		BorderPane.setAlignment(dateAndTime, Pos.BOTTOM_CENTER);
 
 		// Create a scene and place it in the stage
-		Scene scene = new Scene(pane, 400, 500);
+		Scene scene = new Scene(pane, 420, 550);
 		
-		primaryStage.setMinWidth(350);
-		primaryStage.setMinHeight(330);
+		primaryStage.setMinWidth(360);
+		primaryStage.setMinHeight(360);
 		
 		primaryStage.setTitle("DisplayClock"); // Set the stage title
 		primaryStage.setScene(scene); // Place the scene in the stage
@@ -57,4 +57,5 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+
 }

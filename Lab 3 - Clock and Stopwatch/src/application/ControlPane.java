@@ -16,8 +16,6 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -45,7 +43,7 @@ public class ControlPane extends VBox {
 
 	private void startAnimation() {
 		time = new SimpleStringProperty();
-		tl = new Timeline(new KeyFrame(Duration.millis(100), ae -> {
+		tl = new Timeline(new KeyFrame(Duration.millis(33), ae -> {
 
 			// We keep the observable 'time' property updated with current time
 			time.set(clock.getTimeString());
