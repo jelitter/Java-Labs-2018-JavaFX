@@ -3,19 +3,24 @@ package application;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 
 import java.util.Calendar;
 
 import javafx.animation.KeyFrame;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -27,6 +32,7 @@ public class ControlPane extends VBox {
 	public StringProperty time;
 	private Timeline tl;
 	private CheckBox compassMode, smoothMode;
+	ComboBox<Double> comboBox;
 	private static final String START_STYLE = "-fx-base: LIMEGREEN;";
 	private static final String STOP_STYLE = "-fx-base: LIGHTCORAL;";
 
@@ -43,7 +49,7 @@ public class ControlPane extends VBox {
 
 	private void startAnimation() {
 		time = new SimpleStringProperty();
-		tl = new Timeline(new KeyFrame(Duration.millis(33), ae -> {
+		tl = new Timeline(new KeyFrame(Duration.millis(16), ae -> {
 
 			// We keep the observable 'time' property updated with current time
 			time.set(clock.getTimeString());
@@ -72,24 +78,37 @@ public class ControlPane extends VBox {
 		btnSetTime = new Button("Set current time");
 		setIcon(btnSetTime, "reset.png");
 
+		this.setSpacing(10);
 		HBox buttons = new HBox(10);
+		HBox secHandOpts = new HBox(5);
 		HBox options = new HBox(10);
 
 		buttons.setAlignment(Pos.CENTER);
+		secHandOpts.setAlignment(Pos.CENTER);
 		options.setAlignment(Pos.CENTER);
 		
-		compassMode = new CheckBox("Compass mode");
-		compassMode.setMaxWidth(USE_COMPUTED_SIZE);
-		smoothMode = new CheckBox("Smooth");
-		smoothMode.setMaxWidth(USE_COMPUTED_SIZE);
-		smoothMode.setDisable(!compassMode.isSelected());
-
-//		HBox.setHgrow(separator, Priority.ALWAYS);
+		secHandOpts.setPrefHeight(20);
+		comboBox = new ComboBox<Double>(FXCollections.observableArrayList(1.0, 0.5, 0.1));
+		comboBox.setPromptText("Seconds");
+		comboBox.getSelectionModel().select(0);
+		clock.setMoveEverySecond(getEverySecond());
 		
-		options.getChildren().addAll(compassMode, smoothMode);
+		Label t1 = new Label("Move seconds hand every"); 
+		Label t2 = new Label("seconds"); 
+		
+		compassMode = new CheckBox("Compass mode");
+		compassMode.setPrefWidth(USE_COMPUTED_SIZE);
+		smoothMode = new CheckBox("Smooth");
+		smoothMode.setPrefWidth(USE_COMPUTED_SIZE);
+		smoothMode.setDisable(!compassMode.isSelected());
+		Group separator = new Group();
+		HBox.setHgrow(separator, Priority.ALWAYS);
+		
 		buttons.getChildren().addAll(btnStopWatch, btnSetTime);
+		secHandOpts.getChildren().addAll(t1, comboBox, t2);
+		options.getChildren().addAll(compassMode, separator, smoothMode);
 
-		this.getChildren().addAll(buttons, options);
+		this.getChildren().addAll(buttons, secHandOpts, options);
 
 		for (Node n : buttons.getChildren()) {
 			if (n instanceof Button) {
@@ -109,8 +128,16 @@ public class ControlPane extends VBox {
 			clock.setRotate(compassMode.isSelected() ? -clock.getSecond() * 6 : 0);
 			smoothMode.setDisable(!compassMode.isSelected());
 		});
+		
+		comboBox.setOnAction(e -> {
+			clock.setMoveEverySecond(getEverySecond());
+		});
 
 
+	}
+	
+	public double getEverySecond() {
+		return (double) comboBox.getValue();
 	}
 
 	public void setIcon(Button button, String iconName) {

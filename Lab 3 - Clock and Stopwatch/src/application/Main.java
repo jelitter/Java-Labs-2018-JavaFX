@@ -47,7 +47,7 @@ public class Main extends Application {
 		Scene scene = new Scene(pane, 420, 550);
 		
 		primaryStage.setMinWidth(360);
-		primaryStage.setMinHeight(360);
+		primaryStage.setMinHeight(500);
 		
 		primaryStage.setTitle("DisplayClock"); // Set the stage title
 		primaryStage.setScene(scene); // Place the scene in the stage

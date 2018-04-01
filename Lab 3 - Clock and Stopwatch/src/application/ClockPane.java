@@ -1,5 +1,7 @@
 package application;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,11 +31,14 @@ public class ClockPane extends Pane {
 
 	private static final int CLOCK_MARGIN = 16;
 
+	private Group frame, hands;
 	private Circle c1, c2;
 	private Calendar cal;
 	private int hour;
 	private int minute;
-	private int second;
+	private double second;
+	private double decs;
+	private double moveEverySecond;
 
 	/** Construct a default clock with the current time */
 	public ClockPane() {
@@ -71,7 +76,7 @@ public class ClockPane extends Pane {
 	}
 
 	/** Return second */
-	public int getSecond() {
+	public double getSecond() {
 		return second;
 	}
 
@@ -90,7 +95,14 @@ public class ClockPane extends Pane {
 		this.hour = calendar.get(Calendar.HOUR_OF_DAY);
 		this.minute = calendar.get(Calendar.MINUTE);
 		this.second = calendar.get(Calendar.SECOND);
-
+		this.decs = (double) calendar.get(Calendar.MILLISECOND) / 1000;
+		
+		if (moveEverySecond == 0.1) {
+			this.second = second + round(decs, 1);
+		} else if (moveEverySecond == 0.5) {
+			this.second = decs < .5 ? second : second + .5 ;
+		}
+		
 		paintClock(); // Repaint the clock
 	}
 
@@ -98,22 +110,20 @@ public class ClockPane extends Pane {
 	private void paintClock() {
 		// Initialize clock parameters
 		double clockRadius = Math.min(getWidth(), getHeight()) * 0.8 * 0.5;
-
 		double centerX = getWidth() / 2;
 		double centerY = getHeight() / 2;
 
-		Group frame = new Group();
-		Group hands = new Group();
-//		Group numbers = new Group();
+		frame = new Group();
+		hands = new Group();
 
-		setClockFrame(clockRadius, centerX, centerY, frame);
-		setClockNeedles(clockRadius, centerX, centerY, hands);
+		setupClockFrame(clockRadius, centerX, centerY, frame);
+		setClockHands(clockRadius, centerX, centerY, hands);
 
 		getChildren().clear();
 		getChildren().addAll(frame, hands);
 	}
 
-	private void setClockFrame(double clockRadius, double centerX, double centerY, Group frame) {
+	private void setupClockFrame(double clockRadius, double centerX, double centerY, Group frame) {
 		// Draw circle
 		c1 = new Circle(centerX, centerY, clockRadius);
 		c2 = new Circle(centerX, centerY, clockRadius);
@@ -189,7 +199,7 @@ public class ClockPane extends Pane {
 		frame.getChildren().addAll(numbers);
 	}
 
-	private void setClockNeedles(double clockRadius, double centerX, double centerY, Group needles) {
+	private void setClockHands(double clockRadius, double centerX, double centerY, Group needles) {
 		// Draw second hand
 		Polygon secondHand = new Polygon();
 		double secondWidth = Math.max(clockRadius * 0.01, 2);
@@ -264,10 +274,29 @@ public class ClockPane extends Pane {
 	}
 
 	public String getTimeString() {
-		return getHour() + ":" + String.format("%02d", getMinute()) + ":" + String.format("%02d", getSecond());
+		return getHour() + ":" + String.format("%02d", getMinute()) + ":" + String.format("#00", getSecond());
 	}
 
 	public String getDateString() {
 		return new SimpleDateFormat("EEEE, d MMMM yyyy").format(cal.getTime());
+	}
+	
+	 
+	
+	public double getMoveEverySecond() {
+		return moveEverySecond;
+	}
+
+	public void setMoveEverySecond(double moveEverySecond) {
+		this.moveEverySecond = moveEverySecond;
+	}
+
+	// Helper
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
 	}
 }
