@@ -6,12 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -24,16 +22,17 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 
 
 public class ClockPane extends Pane {
 
-	private static final int CLOCK_MARGIN = 16;
-
 	private Group frame, hands;
 	private Circle c1, c2;
+	private Polygon secondHand, minuteHand, hourHand, stopWatchHand;
+	private DropShadow shadow;
+	private int stopWatchSeconds;
 	private Calendar cal;
+	private double centerX, centerY, clockRadius;
 	private int hour;
 	private int minute;
 	private double second;
@@ -109,21 +108,28 @@ public class ClockPane extends Pane {
 	/** Paint the clock */
 	private void paintClock() {
 		// Initialize clock parameters
-		double clockRadius = Math.min(getWidth(), getHeight()) * 0.8 * 0.5;
-		double centerX = getWidth() / 2;
-		double centerY = getHeight() / 2;
+		clockRadius = Math.min(getWidth(), getHeight()) * 0.8 * 0.5;
+		centerX = getWidth() / 2;
+		centerY = getHeight() / 2;
 
 		frame = new Group();
 		hands = new Group();
 
-		setupClockFrame(clockRadius, centerX, centerY, frame);
-		setClockHands(clockRadius, centerX, centerY, hands);
+		setupClockFrame(frame);
+		setClockHands(hands);
+		
+		shadow = new DropShadow();
+		shadow.setOffsetY(0.0f);
+		shadow.setOffsetX(0.0f);
+		shadow.setColor(Color.GRAY);
+		hands.setEffect(shadow);
+		frame.setEffect(shadow);
 
 		getChildren().clear();
 		getChildren().addAll(frame, hands);
 	}
 
-	private void setupClockFrame(double clockRadius, double centerX, double centerY, Group frame) {
+	private void setupClockFrame(Group frame) {
 		// Draw circle
 		c1 = new Circle(centerX, centerY, clockRadius);
 		c2 = new Circle(centerX, centerY, clockRadius);
@@ -162,6 +168,7 @@ public class ClockPane extends Pane {
 					centerX - markWidth/2, centerY - clockRadius +35 + markLength, 
 					centerX + markWidth/2, centerY - clockRadius + 35 + markLength });
 			m.getTransforms().addAll(new Rotate(i * 6, centerX, centerY));
+			m.setEffect(shadow);
 			marks.add(m);
 			
 			if ( i % 5 == 0) {
@@ -174,12 +181,7 @@ public class ClockPane extends Pane {
 				thour.setY(centerY - clockRadius + 27);
 				thour.getTransforms().addAll(new Rotate(i * 6, centerX, centerY));
 				thour.setBlendMode(BlendMode.MULTIPLY);
-				
-//				double r = clockRadius - 27;
-//				double cx = centerX + r * Math.sin(i * (2 * Math.PI / 60));
-//				double cy = centerY - r * Math.cos(i * (2 * Math.PI / 60));
-//				thour.getTransforms().addAll(new Rotate( -i * 6, cx, cy));
-				
+				thour.setEffect(shadow);
 				numbers.add(thour);
 				
 				Text t  = new Text(Integer.toString( i ));
@@ -194,16 +196,15 @@ public class ClockPane extends Pane {
 			} 
 		}
 
-
 		frame.getChildren().addAll(c1, c2);
 		frame.getChildren().addAll(marks);
 		frame.getChildren().addAll(numbers);
 	}
 
-	private void setClockHands(double clockRadius, double centerX, double centerY, Group needles) {
+	private void setClockHands(Group hands) {
 
 		// Draw second hand
-		Polygon secondHand = new Polygon();
+		secondHand = new Polygon();
 		double secondWidth = Math.max(clockRadius * 0.015, 2);
 		double sLength = clockRadius - 34;
 		secondHand.setFill(Color.RED);
@@ -215,9 +216,8 @@ public class ClockPane extends Pane {
 				centerX + secondWidth, centerY +28 });
 		secondHand.getTransforms().addAll(new Rotate( (second) * 6, centerX, centerY));
 
-
 		 //Draw minute hand
-		Polygon minuteHand = new Polygon();
+		minuteHand = new Polygon();
 		double minuteWidth = Math.max(clockRadius * 0.03, 2);
 		double mLength = clockRadius - 34;
 		minuteHand.setStrokeWidth(1);
@@ -232,7 +232,7 @@ public class ClockPane extends Pane {
 		minuteHand.getTransforms().addAll(new Rotate(minute * 6, centerX, centerY));
 		
 		// Draw hour hand
-		Polygon hourHand = new Polygon();
+		hourHand = new Polygon();
 		double hourWidth = Math.max(clockRadius * 0.04, 3);
 		double hLength = mLength * 0.65;
 		hourHand.setFill(Color.BLACK);
@@ -244,17 +244,29 @@ public class ClockPane extends Pane {
 				centerX + hourWidth, centerY +18 });
 		hourHand.getTransforms().addAll(new Rotate( (hour%12) * 30, centerX, centerY));
 
-		Circle dot = new Circle(centerX, centerY, 5);
+		
+		// Draw stopwatch hand
+		stopWatchHand = new Polygon();
+		stopWatchHand.getPoints().addAll(secondHand.getPoints());
+		stopWatchHand.setFill(Color.LIME);
+		stopWatchHand.getTransforms().addAll(new Rotate( (stopWatchSeconds) * 6, centerX, centerY));
+
+		
+		Circle dot = new Circle(centerX, centerY, hourWidth);
 		dot.setFill(Color.RED);
 		
-		needles.getChildren().addAll(hourHand, minuteHand, secondHand, dot);
+		hands.getChildren().addAll(hourHand, minuteHand, stopWatchHand, secondHand, dot);
 
-		// Setting up needles
-		for (Node n : needles.getChildren()) {
+
+		// Some styling
+		for (Node n : hands.getChildren()) {
 			((Shape) n).setStrokeLineCap(StrokeLineCap.ROUND);
 			((Shape) n).setSmooth(true);
-//			((Shape) n).setBlendMode(BlendMode.MULTIPLY);
 		}
+	}
+	
+	public void setStopWatchSeconds(int seconds) {
+		stopWatchSeconds = seconds;
 	}
 
 
@@ -271,14 +283,12 @@ public class ClockPane extends Pane {
 	}
 
 	public String getTimeString() {
-		return getHour() + ":" + String.format("%02d", getMinute()) + ":" + String.format("#00", getSecond());
+		return getHour() + ":" + String.format("%02d", getMinute()) + ":" + String.format("%.0f", getSecond());
 	}
 
 	public String getDateString() {
 		return new SimpleDateFormat("EEEE, d MMMM yyyy").format(cal.getTime());
 	}
-	
-	 
 	
 	public double getMoveEverySecond() {
 		return moveEverySecond;
@@ -288,7 +298,7 @@ public class ClockPane extends Pane {
 		this.moveEverySecond = moveEverySecond;
 	}
 
-	// Helper
+	// Helper to round milliseconds
 	public static double round(double value, int places) {
 	    if (places < 0) throw new IllegalArgumentException();
 

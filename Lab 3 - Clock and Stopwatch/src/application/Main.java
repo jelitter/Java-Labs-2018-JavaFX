@@ -29,8 +29,6 @@ public class Main extends Application {
 		
 		ControlPane control = new ControlPane(clock);
 		lblCurrentTime.textProperty().bind(control.time);
-		
-
 
 		
 		// Place control, clock and label in border pane
@@ -44,10 +42,10 @@ public class Main extends Application {
 		BorderPane.setAlignment(dateAndTime, Pos.BOTTOM_CENTER);
 
 		// Create a scene and place it in the stage
-		Scene scene = new Scene(pane, 420, 550);
+		Scene scene = new Scene(pane, 420, 600);
 		
-		primaryStage.setMinWidth(360);
-		primaryStage.setMinHeight(500);
+		primaryStage.setMinWidth(420);
+		primaryStage.setMinHeight(600);
 		
 		primaryStage.setTitle("DisplayClock"); // Set the stage title
 		primaryStage.setScene(scene); // Place the scene in the stage
