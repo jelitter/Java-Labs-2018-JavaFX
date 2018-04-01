@@ -5,14 +5,24 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+
+/**
+ * 
+ * @author Isaac Sanchez
+ *
+ */
 public class Main extends Application {
 	@Override // Override the start method in the Application class
 	public void start(Stage primaryStage) {
+		
+		primaryStage.getIcons().add(new Image("/assets/clock.png" ));
+		
 		// Create a clock and a label
 		ClockPane clock = new ClockPane();
 		String timeString = clock.getTimeString();
@@ -47,7 +57,7 @@ public class Main extends Application {
 		primaryStage.setMinWidth(420);
 		primaryStage.setMinHeight(600);
 		
-		primaryStage.setTitle("DisplayClock"); // Set the stage title
+		primaryStage.setTitle("Clock + Stopwatch  -  Isaac Sanchez"); // Set the stage title
 		primaryStage.setScene(scene); // Place the scene in the stage
 		primaryStage.show(); // Display the stage
 	}

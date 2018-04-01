@@ -23,7 +23,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 
-
+/**
+ * 
+ * @author Isaac Sanchez
+ *
+ */
 public class ClockPane extends Pane {
 
 	private Group frame, hands;

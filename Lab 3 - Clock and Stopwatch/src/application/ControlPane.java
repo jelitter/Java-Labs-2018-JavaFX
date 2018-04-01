@@ -26,6 +26,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+/**
+ * 
+ * @author Isaac Sanchez
+ *
+ */
 public class ControlPane extends VBox {
 
 	private StopWatch watch;

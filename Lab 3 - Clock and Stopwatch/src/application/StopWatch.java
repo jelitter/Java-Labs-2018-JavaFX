@@ -8,6 +8,11 @@ import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Duration;
 
+/**
+ * 
+ * @author Isaac Sanchez
+ *
+ */
 public class StopWatch {
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("mm:ss:S");
