@@ -166,7 +166,8 @@ public class ClockPane extends Pane {
 			
 			if ( i % 5 == 0) {
 				Text thour = new Text(Integer.toString( i > 0 ? i/5 : 12 ));
-				thour.setFont(Font.font("Arial", FontWeight.MEDIUM, 22));
+				double fontSize = Math.max(18, clockRadius * .15);
+				thour.setFont(Font.font("Arial", FontWeight.MEDIUM, fontSize > 30 ? 30 : fontSize));
 				thour.setFontSmoothingType(FontSmoothingType.GRAY);
 				thour.setTextAlignment(TextAlignment.CENTER);
 				thour.setX(centerX - thour.getLayoutBounds().getWidth()/2);
@@ -200,10 +201,11 @@ public class ClockPane extends Pane {
 	}
 
 	private void setClockHands(double clockRadius, double centerX, double centerY, Group needles) {
+
 		// Draw second hand
 		Polygon secondHand = new Polygon();
-		double secondWidth = Math.max(clockRadius * 0.01, 2);
-		double sLength = clockRadius * 0.8;
+		double secondWidth = Math.max(clockRadius * 0.015, 2);
+		double sLength = clockRadius - 34;
 		secondHand.setFill(Color.RED);
 		secondHand.getPoints()
 		.addAll(new Double[] { 
@@ -213,16 +215,11 @@ public class ClockPane extends Pane {
 				centerX + secondWidth, centerY +28 });
 		secondHand.getTransforms().addAll(new Rotate( (second) * 6, centerX, centerY));
 
-//		new Timeline(new KeyFrame(Duration.millis(300), ae -> {
-//			secondHand.getTransforms().add(new Rotate( -1, centerX, centerY));
-//		})).play();
-		
 
 		 //Draw minute hand
 		Polygon minuteHand = new Polygon();
-		double minuteWidth = Math.max(clockRadius * 0.025, 2);
-//		double mLength = clockRadius * 0.8;
-		double mLength = clockRadius - 30;
+		double minuteWidth = Math.max(clockRadius * 0.03, 2);
+		double mLength = clockRadius - 34;
 		minuteHand.setStrokeWidth(1);
 		minuteHand.setStroke(Color.GRAY);
 		minuteHand.setFill(Color.BLACK);
@@ -237,7 +234,7 @@ public class ClockPane extends Pane {
 		// Draw hour hand
 		Polygon hourHand = new Polygon();
 		double hourWidth = Math.max(clockRadius * 0.04, 3);
-		double hLength = clockRadius * 0.5;
+		double hLength = mLength * 0.65;
 		hourHand.setFill(Color.BLACK);
 		hourHand.getPoints()
 		.addAll(new Double[] { 

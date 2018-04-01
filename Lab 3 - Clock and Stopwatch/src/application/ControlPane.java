@@ -36,7 +36,7 @@ public class ControlPane extends VBox {
 	private static final String START_STYLE = "-fx-base: LIMEGREEN;";
 	private static final String STOP_STYLE = "-fx-base: LIGHTCORAL;";
 
-	private Button btnStopWatch, btnSetTime;
+	private Button btnStopWatch, btnResetStopWatch;
 	private boolean running;
 
 	public ControlPane(ClockPane clock) {
@@ -53,16 +53,19 @@ public class ControlPane extends VBox {
 
 			// We keep the observable 'time' property updated with current time
 			time.set(clock.getTimeString());
-			if (isRunning()) {
-				clock.setCurrentTime();
-				// clock.updateClockFrame();
-				if (compassMode.isSelected()) {
-					if (smoothMode.isSelected())
-						clock.setRotate(-(double) Calendar.getInstance().getTimeInMillis() / 1000 * 6);
-					else
-						clock.setRotate(-clock.getSecond() * 6);
-				}
+			clock.setCurrentTime();
+			// clock.updateClockFrame();
+			if (compassMode.isSelected()) {
+				if (smoothMode.isSelected())
+					clock.setRotate(-(double) Calendar.getInstance().getTimeInMillis() / 1000 * 6);
+				else
+					clock.setRotate(-clock.getSecond() * 6);
 			}
+
+			if (isRunning()) {
+				// Stop watch
+			}
+			
 		}));
 		tl.setCycleCount(Timeline.INDEFINITE);
 		tl.play();
@@ -75,8 +78,8 @@ public class ControlPane extends VBox {
 	private void setupButtons() {
 //		Region separator = new Region();
 		btnStopWatch = new Button();
-		btnSetTime = new Button("Set current time");
-		setIcon(btnSetTime, "reset.png");
+		btnResetStopWatch = new Button("Reset");
+		setIcon(btnResetStopWatch, "reset.png");
 
 		this.setSpacing(10);
 		HBox buttons = new HBox(10);
@@ -104,7 +107,7 @@ public class ControlPane extends VBox {
 		Group separator = new Group();
 		HBox.setHgrow(separator, Priority.ALWAYS);
 		
-		buttons.getChildren().addAll(btnStopWatch, btnSetTime);
+		buttons.getChildren().addAll(btnStopWatch, btnResetStopWatch);
 		secHandOpts.getChildren().addAll(t1, comboBox, t2);
 		options.getChildren().addAll(compassMode, separator, smoothMode);
 
@@ -122,7 +125,7 @@ public class ControlPane extends VBox {
 		}
 
 		btnStopWatch.setOnAction(e -> toggle());
-		btnSetTime.setOnAction(e -> clock.setCurrentTime());
+		btnResetStopWatch.setOnAction(e -> clock.setCurrentTime());
 		
 		compassMode.setOnAction(e -> {
 			clock.setRotate(compassMode.isSelected() ? -clock.getSecond() * 6 : 0);
