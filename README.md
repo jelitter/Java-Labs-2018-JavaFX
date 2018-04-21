@@ -10,6 +10,11 @@ Screenshots of the several screens:
 #### Lab 3 - Clock and Stopwatch
 ![Dental Clinic Loading](img/Clock.png)
 
+#### Lab 4 - Intruder Alarm System
+![Dental Clinic Loading](img/Alarm.png)
+
+
+
 
 
 ---
