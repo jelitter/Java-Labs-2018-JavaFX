@@ -11,7 +11,7 @@ public class Thief extends ImageView {
 	
 	private static final double STEP = 3;
 	private static final double THIEF_SIZE = 64;
-	private static final int THIEF_GIFS = 3;
+	private static final int THIEF_GIFS = 5;
 	private double velX, velY;
 	private StackPane stack;
 
