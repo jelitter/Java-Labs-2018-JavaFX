@@ -34,14 +34,9 @@ public class RoomPane extends Pane {
 
 		root.prefWidthProperty().bind(this.widthProperty());
 		root.prefHeightProperty().bind(this.heightProperty());
-
-
 		
 		HBox roomControls = new HBox(10);
 		roomControls.setPadding(new Insets(10));
-		
-//		roomControls.visibleProperty().bind(MainScreen.getInstance().armedProperty());
-
 		
 		ToggleGroup radioGroup = new ToggleGroup();
 		VBox radioButtons = new VBox(10);
@@ -63,7 +58,7 @@ public class RoomPane extends Pane {
 		// Intruder button will only be visible when "On" radio is selected.
 		btnIntruder.visibleProperty().bind(radioOn.selectedProperty());
 		btnIntruder.setOnMouseClicked(e -> {
-			root.setStyle("-fx-background-color: CORAL;");
+			activateAlarm(root);
 		});
 		
 		
@@ -77,8 +72,20 @@ public class RoomPane extends Pane {
 		title.setFont(Font.font("Arial", FontWeight.BLACK, 14));
 		title.setFill(Color.color(Math.random(), Math.random()/2, Math.random()));
 		root.getChildren().addAll(title, roomControls);
-
 		
+		roomControls.visibleProperty().bind(MainScreen.getInstance().armedProperty());
+
+		root.setOnMouseEntered(e -> {
+			if (radioOn.isSelected())
+				activateAlarm(root);
+		});
+		root.setOnMouseExited(e -> {
+			deactivateAlarm(root);
+		});
+		
+		radioOff.setOnMouseClicked(e -> {
+			deactivateAlarm(root);
+		});
 		
 		
 		
@@ -90,6 +97,13 @@ public class RoomPane extends Pane {
 		shadow.setColor(Color.GRAY);
 		this.setEffect(shadow);
 		title.setEffect(shadow);
+	}
+
+	private void activateAlarm(VBox root) {
+		root.setStyle("-fx-background-color: CORAL;");
+	}
+	private void deactivateAlarm(VBox root) {
+		root.setStyle("-fx-background-color: WHITE;");
 	}
 
 	
