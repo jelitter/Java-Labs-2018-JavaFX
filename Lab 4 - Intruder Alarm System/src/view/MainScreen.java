@@ -3,6 +3,8 @@ package view;
 import java.util.Arrays;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableBooleanValue;
@@ -20,6 +22,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -30,13 +33,13 @@ public class MainScreen {
 	private static final int NUMBER_OF_ROOMS = 4;
 	private static final int WIDTH = 900;
 	private static final int HEIGHT = 600;
-	static ObservableValue<? extends Boolean> armed;
+	static BooleanProperty armedProperty;
 	private static MainScreen instance;
 	private Stage primaryStage;
 	private Button btnAddRoom, btnRemoveRoom, btnAddThief, btnRemoveThief, btnExit;
 	private StackPane stack;
 	private FlowPane roomArea;
-	private Thief thief, thief2 ;
+//	private Thief thief, thief2 ;
 	private ObservableList<RoomPane> rooms;
 	private ObservableList<Thief> thieves;
 
@@ -53,13 +56,15 @@ public class MainScreen {
 
 	
 	public void toggleArmed() {
-		MainScreen.armed = new SimpleBooleanProperty(!MainScreen.armed.getValue());
-		System.out.println("Armed: " + MainScreen.armed.getValue());
+		armedProperty.set(!armedProperty.get());
 	}
 	
 	private void go() {
 
-		armed = new SimpleBooleanProperty(false);
+		armedProperty = new SimpleBooleanProperty(true);
+		
+		
+		
 		rooms = FXCollections.observableArrayList();
 		thieves = FXCollections.observableArrayList();
 
@@ -86,9 +91,23 @@ public class MainScreen {
 		roomArea.setStyle("-fx-background-image: url(" + "'/assets/background.png'" + "); -fx-background-size: cover;");
 
 		HBox controls = new HBox(10);
-		Button btnToggle = new Button("On/Off");
+		Button btnToggle = new Button("Alarm Disarmed");
+		btnToggle.setPrefWidth(160);
 		
-		btnToggle.textProperty().bind((ObservableValue<? extends String>) new SimpleStringProperty(MainScreen.armed.getValue() ? "Off" : "On"));
+//		btnToggle.textProperty().bind(Bindings.concat("Alarm Armed: ", armedProperty.asString()));
+	
+		armedProperty.addListener(e -> {
+			if (armedProperty.get()) {
+				btnToggle.setText("Alarm Armed");
+				btnToggle.setStyle("-fx-background-color: LIMEGREEN;");
+			} else {
+				btnToggle.setText("Alarm Disarmed");
+				btnToggle.setStyle("-fx-background-color: CORAL;");
+			}
+		});
+		
+		armedProperty.set(false);
+		
 		btnToggle.setOnMouseClicked(e -> toggleArmed());
 		
 		

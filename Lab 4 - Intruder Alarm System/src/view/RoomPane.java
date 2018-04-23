@@ -73,7 +73,8 @@ public class RoomPane extends Pane {
 		title.setFill(Color.color(Math.random(), Math.random()/2, Math.random()));
 		root.getChildren().addAll(title, roomControls);
 		
-		roomControls.visibleProperty().bind(MainScreen.armed);
+//		roomControls.visibleProperty().bind(MainScreen.armed);
+		roomControls.visibleProperty().bindBidirectional(MainScreen.armedProperty);
 
 		root.setOnMouseEntered(e -> {
 			if (radioOn.isSelected())
@@ -86,7 +87,6 @@ public class RoomPane extends Pane {
 		radioOff.setOnMouseClicked(e -> {
 			deactivateAlarm(root);
 		});
-		
 		
 		
 		this.getChildren().add(root);
