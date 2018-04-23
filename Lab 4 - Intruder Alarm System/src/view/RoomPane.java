@@ -73,7 +73,7 @@ public class RoomPane extends Pane {
 		title.setFill(Color.color(Math.random(), Math.random()/2, Math.random()));
 		root.getChildren().addAll(title, roomControls);
 		
-		roomControls.visibleProperty().bind(MainScreen.getInstance().armedProperty());
+		roomControls.visibleProperty().bind(MainScreen.armed);
 
 		root.setOnMouseEntered(e -> {
 			if (radioOn.isSelected())

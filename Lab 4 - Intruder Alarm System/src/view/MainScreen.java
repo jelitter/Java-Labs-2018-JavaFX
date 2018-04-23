@@ -30,7 +30,7 @@ public class MainScreen {
 	private static final int NUMBER_OF_ROOMS = 4;
 	private static final int WIDTH = 900;
 	private static final int HEIGHT = 600;
-	private boolean armed;
+	static ObservableValue<? extends Boolean> armed;
 	private static MainScreen instance;
 	private Stage primaryStage;
 	private Button btnAddRoom, btnRemoveRoom, btnAddThief, btnRemoveThief, btnExit;
@@ -51,18 +51,15 @@ public class MainScreen {
 		return instance;
 	}
 
-	public ObservableBooleanValue armedProperty() {
-		return new SimpleBooleanProperty(this.armed);
-	}
-
+	
 	public void toggleArmed() {
-		this.armed = !this.armed;
-		System.out.println("Armed: " + this.armed);
+		MainScreen.armed = new SimpleBooleanProperty(!MainScreen.armed.getValue());
+		System.out.println("Armed: " + MainScreen.armed.getValue());
 	}
 	
 	private void go() {
 
-		armed = false;
+		armed = new SimpleBooleanProperty(false);
 		rooms = FXCollections.observableArrayList();
 		thieves = FXCollections.observableArrayList();
 
@@ -91,7 +88,7 @@ public class MainScreen {
 		HBox controls = new HBox(10);
 		Button btnToggle = new Button("On/Off");
 		
-		btnToggle.textProperty().bind((ObservableValue<? extends String>) new SimpleStringProperty(armedProperty().get() ? "Off" : "On"));
+		btnToggle.textProperty().bind((ObservableValue<? extends String>) new SimpleStringProperty(MainScreen.armed.getValue() ? "Off" : "On"));
 		btnToggle.setOnMouseClicked(e -> toggleArmed());
 		
 		
