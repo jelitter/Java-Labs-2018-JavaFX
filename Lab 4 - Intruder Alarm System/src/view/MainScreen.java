@@ -1,14 +1,10 @@
 package view;
 
-import java.util.Arrays;
-
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -22,14 +18,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class MainScreen {
 
-	private static final double KEYBOARD_MOVEMENT_DELTA = 5.0;
 	private static final int NUMBER_OF_ROOMS = 4;
 	private static final int WIDTH = 900;
 	private static final int HEIGHT = 600;
@@ -39,7 +34,7 @@ public class MainScreen {
 	private Button btnAddRoom, btnRemoveRoom, btnAddThief, btnRemoveThief, btnExit;
 	private StackPane stack;
 	private FlowPane roomArea;
-//	private Thief thief, thief2 ;
+ 	private Timeline detection; 
 	private ObservableList<RoomPane> rooms;
 	private ObservableList<Thief> thieves;
 
@@ -60,6 +55,12 @@ public class MainScreen {
 	}
 	
 	private void go() {
+		
+		detection = new Timeline(new KeyFrame(Duration.millis(33), ae -> {
+			this.detectIntrussion();
+		}));
+		detection.setCycleCount(Timeline.INDEFINITE);
+//		detection.play();
 
 		armedProperty = new SimpleBooleanProperty(true);
 		
@@ -100,9 +101,11 @@ public class MainScreen {
 			if (armedProperty.get()) {
 				btnToggle.setText("Alarm Armed");
 				btnToggle.setStyle("-fx-background-color: LIMEGREEN;");
+				detection.play();
 			} else {
 				btnToggle.setText("Alarm Disarmed");
 				btnToggle.setStyle("-fx-background-color: CORAL;");
+				detection.stop();
 			}
 		});
 		
@@ -117,52 +120,40 @@ public class MainScreen {
 		btnRemoveThief = new Button("- Thief");
 		btnExit = new Button("Exit");
 		Text txtRooms = new Text();
-		HBox space1 = new HBox(10);
-		Pane space2 = new Pane();
-		Pane space3 = new Pane();
+		Text txtThieves= new Text();
+		HBox roomBox = new HBox(10);
+		HBox thiefBox = new HBox(10);
+		Pane spacing = new Pane();
 
 		txtRooms.textProperty().bind(Bindings.concat("Rooms: ", Bindings.size(this.rooms)));
-		space1.getChildren().add(txtRooms);
-		space1.setAlignment(Pos.CENTER);
+		roomBox.getChildren().addAll(btnAddRoom, btnRemoveRoom, txtRooms);
+		roomBox.setAlignment(Pos.CENTER);
+		
+		txtThieves.textProperty().bind(Bindings.concat("Thieves: ", Bindings.size(this.thieves)));
+		thiefBox.getChildren().addAll(btnAddThief, btnRemoveThief, txtThieves);
+		thiefBox.setAlignment(Pos.CENTER);
+		
+		HBox.setHgrow(roomBox, Priority.ALWAYS);
+		HBox.setHgrow(thiefBox, Priority.ALWAYS);
 
-		HBox.setHgrow(space1, Priority.ALWAYS);
-		HBox.setHgrow(space2, Priority.ALWAYS);
-
-		controls.getChildren().addAll(btnToggle, space1, btnAddRoom, btnRemoveRoom, space2, btnAddThief, btnRemoveThief, space3, btnExit);
+		controls.getChildren().addAll(btnToggle, roomBox, thiefBox, spacing, btnExit);
+		controls.setPadding(new Insets(5,5,0,5));
 
 		VBox.setVgrow(roomArea, Priority.ALWAYS);
 		
-//		thief = new Thief(stack);
-//		thief2 = new Thief(stack);
 		stack.getChildren().addAll(roomArea);
 		stack.getChildren().addAll(this.thieves);
-		
-		
+	
 		root.getChildren().addAll(controls, stack);
 
 		Scene scene = new Scene(root, WIDTH, HEIGHT);
-		
-		
-//		scene.setOnKeyPressed(event -> {
-//		      System.out.println(event.getCode() + " -> " + thief.getX() + ", " + thief.getY());
-//		        switch (event.getCode()) {
-//		          case UP:    thief.setTranslateY(thief.getTranslateY() - KEYBOARD_MOVEMENT_DELTA); break;
-//		          case RIGHT: thief.setTranslateX(thief.getTranslateX() + KEYBOARD_MOVEMENT_DELTA); break;
-//		          case DOWN:  thief.setTranslateY(thief.getTranslateY() + KEYBOARD_MOVEMENT_DELTA); break;
-//		          case LEFT:  thief.setTranslateX(thief.getTranslateX() - KEYBOARD_MOVEMENT_DELTA); break;
-//				default:
-//					break;
-//		        }
-//		      
-//		});
 
 		primaryStage.setTitle("Intruder Detection System");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
 		
 		createRooms(NUMBER_OF_ROOMS);
-		
+		createThief();
 
 		setHandlers();
 	}
@@ -222,6 +213,22 @@ public class MainScreen {
 		}
 		roomArea.getChildren().clear();
 		roomArea.getChildren().addAll(rooms);
+	}
+	
+	private void detectIntrussion() {
+
+		for (RoomPane room : this.rooms) {
+
+			// Looking for intrusions
+			room.deactivateAlarm();
+			if (room.armedProperty.get()) {
+				for (Thief thief : this.thieves) {
+					if (thief.isInRoom(room)) {
+						room.activateAlarm();
+					}
+				}
+			}
+		}
 	}
 
 	private void setHandlers() {

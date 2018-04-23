@@ -1,12 +1,13 @@
 package view;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Shadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -15,20 +16,23 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import model.Room;
 
 public class RoomPane extends Pane {
 
 	private Room room;
+	private VBox root;
+	public BooleanProperty armedProperty;
+	private ImageView alarmImg;
 
 	public RoomPane(String name) {
 		room = new Room(name);
+		armedProperty = new SimpleBooleanProperty(false);
 		this.draw();
 	}
 
 	private void draw() {
-		VBox root = new VBox(5);
+		root = new VBox(5);
 		root.setPadding(new Insets(10));
 		root.setStyle("-fx-background-color: WHITE;");
 
@@ -44,28 +48,22 @@ public class RoomPane extends Pane {
 		RadioButton radioOff = new RadioButton("Off");
 		radioOn.setToggleGroup(radioGroup);
 		radioOff.setToggleGroup(radioGroup);
-		radioOff.setSelected(true);
+		radioOn.setSelected(true);
 		radioButtons.getChildren().addAll(radioOn, radioOff);
+		armedProperty.bind(radioOn.selectedProperty());
 		
-		
-		Button btnIntruder = new Button("Intruder");
-		btnIntruder.setTextAlignment(TextAlignment.CENTER);
-		btnIntruder.setAlignment(Pos.CENTER);
-		btnIntruder.setMaxWidth(Double.MAX_VALUE);
-		btnIntruder.setMaxHeight(Double.MAX_VALUE);
-		
-		
-		// Intruder button will only be visible when "On" radio is selected.
-		btnIntruder.visibleProperty().bind(radioOn.selectedProperty());
-		btnIntruder.setOnMouseClicked(e -> {
-			activateAlarm(root);
-		});
-		
+		alarmImg = new ImageView();
+		Image icon = new Image("/assets/alarm.gif");
+		alarmImg.setImage(icon);
+		alarmImg.setFitWidth(50);
+		alarmImg.setPreserveRatio(true);
+		alarmImg.setSmooth(true);
+		alarmImg.setCache(true);
+		alarmImg.setVisible(false);
 		
 		HBox.setHgrow(radioButtons, Priority.ALWAYS);
-		HBox.setHgrow(btnIntruder, Priority.ALWAYS);
-		roomControls.getChildren().addAll(radioButtons, btnIntruder);
-		
+		HBox.setHgrow(alarmImg, Priority.ALWAYS);
+		roomControls.getChildren().addAll(radioButtons, alarmImg);
 		
 		
 		Text title = new Text(this.getName());
@@ -73,21 +71,11 @@ public class RoomPane extends Pane {
 		title.setFill(Color.color(Math.random(), Math.random()/2, Math.random()));
 		root.getChildren().addAll(title, roomControls);
 		
-//		roomControls.visibleProperty().bind(MainScreen.armed);
 		roomControls.visibleProperty().bindBidirectional(MainScreen.armedProperty);
 
-		root.setOnMouseEntered(e -> {
-			if (radioOn.isSelected())
-				activateAlarm(root);
-		});
-		root.setOnMouseExited(e -> {
-			deactivateAlarm(root);
-		});
-		
 		radioOff.setOnMouseClicked(e -> {
-			deactivateAlarm(root);
+			deactivateAlarm();
 		});
-		
 		
 		this.getChildren().add(root);
 		
@@ -99,11 +87,13 @@ public class RoomPane extends Pane {
 		title.setEffect(shadow);
 	}
 
-	private void activateAlarm(VBox root) {
-		root.setStyle("-fx-background-color: CORAL;");
+	public void activateAlarm() {
+		root.setStyle("-fx-background-color: LIGHTCORAL; -fx-border-color: RED; -fx-border-width: 4;");
+		alarmImg.setVisible(true);
 	}
-	private void deactivateAlarm(VBox root) {
-		root.setStyle("-fx-background-color: WHITE;");
+	public void deactivateAlarm() {
+		root.setStyle("-fx-background-color: WHITE; -fx-border-color: TRANSPARENT;");
+		alarmImg.setVisible(false);
 	}
 
 	
